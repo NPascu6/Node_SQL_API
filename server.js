@@ -107,11 +107,11 @@ app.delete("/users", (_request, _result) => {
 
 app.post('/login', (_request, _result) => {
     console.log("creating sql login query");
-    var data = _request.body;
+    var data = _request.body.body;
     console.log(_request.body);
     var SqlQuery =
         `
-    SELECT userName, email from Users WHERE userName = '${data.userName}'
+    SELECT [userId], [userName], [email], [FirstName], [LastName], [StartDate], [EndDate], [RoleName] from Users JOIN UserDetails on Users.id = UserDetails.userId JOIN UserRoles on Users.userRoleId = UserRoles.id WHERE userName = '${data.userName}';
     `;
     console.log(SqlQuery);
     QueryToExecuteInDatabase(_result, SqlQuery);
