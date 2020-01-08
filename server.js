@@ -73,11 +73,13 @@ app.get("/users", (_request, _result) => {
 //POST API
 app.post("/users", (_request, _result) => {
     console.log("creating sql post query");
-    var data = _request.body;
+    var data = _request.body.body;
+    console.log(data);
     var SqlQuery = `
     INSERT INTO UserDetails ([FirstName], [LastName], [StartDate], [EndDate]) VALUES ('${data.FirstName}', '${data.LastName}', '${data.StartDate}', '${data.EndDate}');
-    INSERT INTO Users ([userRoleId], [userName], [email]) VALUES ('${data.RoleName}', '${data.userName}', '${data.email}');  
+    INSERT INTO Users ([userRoleId], [userName], [email]) VALUES ('${data.Role}', '${data.userName}', '${data.email}');  
     `;
+    console.log(SqlQuery)
     QueryToExecuteInDatabase(_result, SqlQuery);
 });
 
