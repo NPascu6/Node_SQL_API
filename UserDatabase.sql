@@ -48,8 +48,9 @@ GO
 CREATE TABLE [dbo].[Users](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[userRoleId] [int] NOT NULL,
-	[userName] [nvarchar](50) NOT NULL,
+	[userName] [nvarchar](50) NOT NULL UNIQUE,
 	[email] [nvarchar](1000) NOT NULL,
+	[password][nvarchar](50) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -95,14 +96,15 @@ GO
 INSERT INTO [dbo].[Users]
            ([userRoleId]
            ,[userName]
-           ,[email])
+           ,[email]
+		   ,[password])
      VALUES
-           ( 1,'admin', 'admin@admin.test'),
-		   ( 2,'user1','user1@user.test'),
-		   ( 2,'user2','user2@user.test'),
-		   ( 2,'user3','user3@user.test'),
-		   ( 2,'user4','user4@user.test'),
-		   ( 2,'user5', 'user5@user.test'),
-		   ( 2,'user6', 'user6@user.test'),
-		   ( 2,'user7','user7@user.test')
+           ( 1,'admin', 'admin@admin.test', 'Password'),
+		   ( 2,'user1','user1@user.test','Password'),
+		   ( 2,'user2','user2@user.test','Password'),
+		   ( 2,'user3','user3@user.test','Password'),
+		   ( 2,'user4','user4@user.test','Password'),
+		   ( 2,'user5', 'user5@user.test','Password'),
+		   ( 2,'user6', 'user6@user.test','Password'),
+		   ( 2,'user7','user7@user.test','Password')
 GO

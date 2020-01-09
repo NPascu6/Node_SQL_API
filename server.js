@@ -52,6 +52,7 @@ var QueryToExecuteInDatabase = (response, queryString) => {
             request.query(queryString, (error, responseResult) => {
                 if (error) {
                     console.log("Error while connecting to User Database : -" + error);
+                    response.send(error);
                 }
                 else {
                     console.log(responseResult);
@@ -77,7 +78,7 @@ app.post("/users", (_request, _result) => {
     console.log(data);
     var SqlQuery = `
     INSERT INTO UserDetails ([FirstName], [LastName], [StartDate], [EndDate]) VALUES ('${data.FirstName}', '${data.LastName}', '${data.StartDate}', '${data.EndDate}');
-    INSERT INTO Users ([userRoleId], [userName], [email]) VALUES ('${data.Role}', '${data.userName}', '${data.email}');  
+    INSERT INTO Users ([userRoleId], [userName], [email], [password]) VALUES ('${data.Role}', '${data.userName}', '${data.email}', '${data.Password}');  
     `;
     console.log(SqlQuery)
     QueryToExecuteInDatabase(_result, SqlQuery);
@@ -113,7 +114,7 @@ app.post('/login', (_request, _result) => {
     console.log(_request.body);
     var SqlQuery =
         `
-    SELECT [userId], [userName], [email], [FirstName], [LastName], [StartDate], [EndDate], [RoleName] from Users JOIN UserDetails on Users.id = UserDetails.userId JOIN UserRoles on Users.userRoleId = UserRoles.id WHERE userName = '${data.userName}';
+    SELECT [userId], [userName], [email], [FirstName], [LastName], [StartDate], [EndDate], [RoleName] from Users JOIN UserDetails on Users.id = UserDetails.userId JOIN UserRoles on Users.userRoleId = UserRoles.id WHERE userName = '${data.userName}' AND  password = '${data.password}';
     `;
     console.log(SqlQuery);
     QueryToExecuteInDatabase(_result, SqlQuery);
