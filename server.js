@@ -66,7 +66,7 @@ var QueryToExecuteInDatabase = (response, queryString) => {
 //GET API
 app.get("/users", (_request, _result) => {
     var SqlQuery = `
-    SELECT [userId], [userName], [email], [FirstName], [LastName], [StartDate], [EndDate], [RoleName] from Users JOIN UserDetails on Users.id = UserDetails.userId JOIN UserRoles on Users.userRoleId = UserRoles.id;   
+    SELECT [userId], [userName], [password], [email], [FirstName], [LastName], [StartDate], [EndDate], [RoleName] from Users JOIN UserDetails on Users.id = UserDetails.userId JOIN UserRoles on Users.userRoleId = UserRoles.id;   
     `;
     QueryToExecuteInDatabase(_result, SqlQuery);
 });
@@ -78,7 +78,7 @@ app.post("/users", (_request, _result) => {
     console.log(data);
     var SqlQuery = `
     INSERT INTO UserDetails ([FirstName], [LastName], [StartDate], [EndDate]) VALUES ('${data.FirstName}', '${data.LastName}', '${data.StartDate}', '${data.EndDate}');
-    INSERT INTO Users ([userRoleId], [userName], [email], [password]) VALUES ('${data.Role}', '${data.userName}', '${data.email}', '${data.Password}');  
+    INSERT INTO Users ([userRoleId], [userName], [email], [password]) VALUES ('${data.RoleName}', '${data.userName}', '${data.email}', '${data.password}');  
     `;
     console.log(SqlQuery)
     QueryToExecuteInDatabase(_result, SqlQuery);
@@ -86,19 +86,20 @@ app.post("/users", (_request, _result) => {
 
 app.put("/users", (_request, _result) => {
     console.log("creating sql update query");
-    console.log(_request.body)
-    var data = _request.body;
+    console.log(_request.body.body)
+    var data = _request.body.body;
+    data.RoleName == 'admin' ? data.RoleName = 1 : data.RoleName = 2;
     console.log(data);
     var SqlQuery = `
-    UPDATE UserDetails SET FirstName = '${data.FirstName}', LastName = '${data.LastName}', StartDate = '${data.StartDate.substr(0, data.StartDate.indexOf("T"))}', EndDate = '${data.EndDate.substr(0, data.EndDate.indexOf("T"))}' WHERE [userId] = '${data.userId}';
+    UPDATE UserDetails SET FirstName = '${data.FirstName}', LastName = '${data.LastName}', StartDate = '${data.StartDate}', EndDate = '${data.EndDate}' WHERE [userId] = '${data.userId}';
     `;
     QueryToExecuteInDatabase(_result, SqlQuery);
 });
 
 app.delete("/users", (_request, _result) => {
     console.log("creating sql delete query");
-    console.log(_request.body)
-    var userId = _request.body.userId;
+    console.log(_request.body.body)
+    var userId = _request.body.body.userId;
     var SqlQuery =
         `
     DELETE FROM Users WHERE id = ${userId}
@@ -114,7 +115,7 @@ app.post('/login', (_request, _result) => {
     console.log(_request.body);
     var SqlQuery =
         `
-    SELECT [userId], [userName], [email], [FirstName], [LastName], [StartDate], [EndDate], [RoleName] from Users JOIN UserDetails on Users.id = UserDetails.userId JOIN UserRoles on Users.userRoleId = UserRoles.id WHERE userName = '${data.userName}' AND  password = '${data.password}';
+    SELECT [userId], [userName], [email], [password], [FirstName], [LastName], [StartDate], [EndDate], [RoleName] from Users JOIN UserDetails on Users.id = UserDetails.userId JOIN UserRoles on Users.userRoleId = UserRoles.id WHERE userName = '${data.userName}' AND  password = '${data.password}';
     `;
     console.log(SqlQuery);
     QueryToExecuteInDatabase(_result, SqlQuery);
